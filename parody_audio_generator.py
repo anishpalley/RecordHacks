@@ -7,6 +7,7 @@ from pydub import AudioSegment
 from huggingface_hub import hf_hub_download
 import numpy as np
 from scipy.io.wavfile import write as write_wav
+from download_song_as_mp3 import download_song_as_mp3
 
 # Bark (Hugging Face version)
 from bark import SAMPLE_RATE, generate_audio, preload_models
