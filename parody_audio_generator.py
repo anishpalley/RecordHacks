@@ -4,7 +4,15 @@ from bs4 import BeautifulSoup
 import openai
 from dotenv import load_dotenv
 from pydub import AudioSegment
-import subprocess
+from huggingface_hub import hf_hub_download
+import numpy as np
+from scipy.io.wavfile import write as write_wav
+
+# Bark (Hugging Face version)
+from bark import SAMPLE_RATE, generate_audio, preload_models
+
+# Download models using Hugging Face (optional, handled by preload_models)
+# hf_hub_download(repo_id="suno/bark", filename="model_weights/path/to/file.pth")
 
 load_dotenv()
 GENIUS_API_TOKEN = os.getenv("GENIUS_API_TOKEN")
@@ -49,24 +57,14 @@ def generate_parody(original_line, topic):
         print(f"Error generating parody: {e}")
         return original_line
 
+# 3. Generate vocals with Bark + HF
 def generate_vocals(parody_text, output_file="vocals.wav"):
-    import numpy as np
-    from scipy.io.wavfile import write as write_wav
-
-    from bark_module.api import generate_audio, preload_models
-
     preload_models()
     audio_array = generate_audio(parody_text)
-
-    write_wav(output_file, 22050, np.array(audio_array))
+    write_wav(output_file, SAMPLE_RATE, np.array(audio_array))
     return output_file
 
-
-
-
-
 # 4. Overlay vocals on instrumental
-
 def mix_audio(vocal_file, instrumental_file, output_file="final_parody.mp3"):
     vocals = AudioSegment.from_file(vocal_file)
     instrumental = AudioSegment.from_file(instrumental_file)
@@ -74,7 +72,6 @@ def mix_audio(vocal_file, instrumental_file, output_file="final_parody.mp3"):
     mixed.export(output_file, format="mp3")
 
 # 5. Main CLI Program
-
 def main():
     print("\U0001F3A4 Parody Song Generator 🎵")
     song_name = input("Enter a song title (include artist): ")
