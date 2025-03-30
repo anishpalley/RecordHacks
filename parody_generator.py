@@ -13,8 +13,8 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 response = openai.chat.completions.create(
     model="gpt-4o-mini",
     messages=[
-        {"role": "system", "content": "You are a helpful assistant."},
-        {"role": "user", "content": "Hello!"},
+    {"role": "system", "content": "You are a helpful assistant that creates parody versions of song lyrics. Ensure the output maintains the same rhythm, syllables, and rhyme as the original lyrics, and make it funny or clever. Do not include the word 'Parody:' in the output."},
+    {"role": "user", "content": "Hello!"},
     ],
     temperature=0.8,
     max_tokens=60
@@ -50,56 +50,63 @@ def scrape_lyrics(url):
 
     return ""
 
+# Batch multiple lines together in fewer API calls
+def generate_parody_batch(original_lines, topic, batch_size=10):
 
-def generate_parody(original_line, topic):
+    original_lines_count = len("\n".join(original_lines).split())
+    
     prompt = (
-        f"Original lyric: \"{original_line.strip()}\"\n"
-        f"Write a parody version of this line about '{topic}'. "
-        f"Try to keep the same rhythm, syllables, and rhyme if possible.\n"
-        f"Make it funny or clever, but keep it listenable."
+    f"Write a parody version of this music about '{topic}'. Do not include the original song in the output "
+    f"Try to keep the same rhythm, syllables, and rhyme if possible, and limit it to {original_lines_count/len(original_lines)} words or less\n"
+    f"Make it funny or clever, but keep it listenable. Do not include section headers such as verses or chorus or outro.\n"
+    f"Do not include the word 'Parody:' or any similar prefix in the output. Include only the lyrics. Return as plain song lyrics"
     )
 
-    try:
-        response = openai.chat.completions.create(
-            model="gpt-4o-mini",  # or "gpt-3.5-turbo" if you don’t have GPT-4 access
-            messages=[{"role": "user", "content": prompt}],
-            temperature=0.8,
-            max_tokens=60
-        )
-        return response.choices[0].message.content.strip()
-    except Exception as e:
-        print(f"Error generating parody: {e}")
-        return original_line
-
-
-# Batch multiple lines together in fewer API calls
-def generate_parody_batch(original_lines, topic, batch_size=5):
     results = []
     for i in range(0, len(original_lines), batch_size):
         batch = original_lines[i:i+batch_size]
-        prompts = []
+        prompts = [prompt]
         for line in batch:
-            if line.strip() == "" or line.startswith("["):
-                results.append(line)
-            else:
-                prompts.append(f"Original: \"{line.strip()}\"\nParody about '{topic}':")
-        
+            prompts.append(f"Original: \"{line.strip()}\"")
+
         if prompts:
             try:
                 response = openai.chat.completions.create(
                     model="gpt-4o-mini",  # Cheaper, faster model
-                    messages=[{"role": "system", "content": f"Write parody versions of these lyrics about '{topic}'. Keep the rhythm and rhyme if possible."},
+                    messages=[{"role": "system", "content": prompt},
                              {"role": "user", "content": "\n\n".join(prompts)}],
-                    temperature=0.8
+                    temperature=0.8,
+                    max_tokens=60
+
                 )
                 parodies = response.choices[0].message.content.strip().split("\n")
                 results.extend([p for p in parodies if p.strip()])
             except Exception as e:
                 print(f"Error: {e}")
                 results.extend(batch)
-    
+
     return results
 
+def generate_parody_song(song_name, topic):
+    print("🎤 Parody Song Generator 🎵")
+    # Fetch lyrics using existing functions
+    url = get_song_url(song_name)
+    if not url:
+        print("❌ Song not found on Genius.")
+        return None
+    lyrics = scrape_lyrics(url)
+    if not lyrics:
+        print("❌ Could not extract lyrics.")
+        return None
+    print("Generating parody...\n")
+    original_lines = lyrics.split("\n")
+    # Reuse your batch logic (keeping the original batch size)
+    parody_lines = generate_parody_batch(original_lines, topic)
+    parody_lyrics = "\n".join(parody_lines)
+    with open("parody_lyrics.txt", "w") as file:
+        file.write(parody_lyrics)
+    print("Parody lyrics saved to parody_lyrics.txt")
+    return "parody_lyrics.txt"
 
 def main():
     print("🎤 Parody Song Generator 🎵")
@@ -119,10 +126,16 @@ def main():
 
     print("\nGenerating parody...\n")
     parody_lines = generate_parody_batch(lyrics.split("\n"), topic)
-    
+
     parody_lyrics = "\n".join(parody_lines)
     print("🎶 Parody Lyrics 🎶\n")
     print(parody_lyrics)
+
+    # Store the output in a file
+    with open("parody_lyrics.txt", "w") as file:
+        file.write(parody_lyrics)
+
+    print("\nParody lyrics saved to parody_lyrics.txt")
 
 
 if __name__ == "__main__":

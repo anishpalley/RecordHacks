@@ -1,13 +1,13 @@
 import yt_dlp
 
-def download_song_as_mp3(song_name, output_path="original"):
+def download_song_as_mp3(song_name, output_path="original.mp3"):
     print(f"\n🔎 Searching and downloading '{song_name}' from YouTube...")
 
     ydl_opts = {
         'format': 'bestaudio/best',
         'noplaylist': True,
         'quiet': False,
-        'outtmpl': output_path,  # no .mp3
+        'outtmpl': output_path,  # force output to original.mp3
         'postprocessors': [{
             'key': 'FFmpegExtractAudio',
             'preferredcodec': 'mp3',
