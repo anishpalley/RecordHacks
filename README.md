@@ -78,10 +78,45 @@ ParodyAI is an AI-powered application that transforms any song into a hilarious 
 2. Enter the song title, parody theme, voice, and speed.
 3. Click "Generate Parody" to create and download your parody song.
 
-### Command Line
-- Use the CLI tools in the repository for advanced usage:
-  - `parody_generator.py` for generating parody lyrics.
-  - `parody_audio_generator.py` for synthesizing vocals and mixing audio.
+### API Endpoints
+- **Generate Parody**:  
+  Endpoint: `/generate_parody`  
+  Method: `POST`  
+  Payload:  
+  ```json
+  {
+    "song_name": "Song Title",
+    "topic": "Parody Theme",
+    "voice": "Voice Option",
+    "speed": "normal | slow | fast"
+  }
+  ```
+  Response:  
+  - On success:  
+    ```json
+    {
+      "parody_lyrics": "Generated parody lyrics...",
+      "audio_file_url": "/download_audio"
+    }
+    ```
+  - On failure:  
+    ```json
+    {
+      "error": "Error message"
+    }
+    ```
+
+- **Download Audio**:  
+  Endpoint: `/download_audio`  
+  Method: `GET`  
+  Response:  
+  - On success: Returns the generated MP3 file.  
+  - On failure:  
+    ```json
+    {
+      "error": "Audio file not found"
+    }
+    ```
 
 ---
 
@@ -90,6 +125,7 @@ ParodyAI is an AI-powered application that transforms any song into a hilarious 
 - **Flask**: Backend framework for the web interface.
 - **OpenAI GPT**: Generates parody lyrics.
 - **Bark**: AI-powered text-to-singing model.
+- **Edge TTS**: Text-to-speech synthesis.
 - **Pydub**: Audio processing and mixing.
 - **Demucs**: Instrumental and vocal separation.
 - **yt-dlp**: Downloads audio from YouTube.
@@ -101,7 +137,6 @@ ParodyAI is an AI-powered application that transforms any song into a hilarious 
 ```
 RecordHacks/
 ├── parody_generator.py         # Generates parody lyrics
-├── parody_audio_generator.py   # Synthesizes vocals and mixes audio
 ├── server.py                   # Flask server for the web interface
 ├── main.py                     # Handles audio separation and mixing
 ├── edge.py                     # Text-to-speech synthesis
