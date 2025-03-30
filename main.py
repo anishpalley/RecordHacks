@@ -50,19 +50,26 @@ def merge_instrumental_stems(output_folder="demucs_output/htdemucs/original", ou
     Output:
     - Saves the combined instrumental file.
     """
-    # Load separated stems
-    drums = AudioSegment.from_file(f"{output_folder}/drums.wav")
-    bass = AudioSegment.from_file(f"{output_folder}/bass.wav")
-    other = AudioSegment.from_file(f"{output_folder}/other.wav")
+    try:
+        # Load separated stems
+        drums = AudioSegment.from_file(f"{output_folder}/drums.wav")
+        bass = AudioSegment.from_file(f"{output_folder}/bass.wav")
+        other = AudioSegment.from_file(f"{output_folder}/other.wav")
 
-    # Merge stems by adding them together
-    instrumental = drums.overlay(bass).overlay(other)
+        # Merge stems by adding them together
+        instrumental = drums.overlay(bass).overlay(other)
 
-    lower_instrumental_volume()
+        # Export the merged instrumental file
+        instrumental.export(output_file, format="wav")
+        print(f"Instrumental track saved as {output_file}")
 
-    # Export final instrumental file
-    instrumental.export(output_file, format="wav")
-    print(f"Instrumental track saved as {output_file}")
+        # Lower the volume of the instrumental file
+        lower_instrumental_volume(input_file=output_file, output_file=output_file)
+
+    except FileNotFoundError as e:
+        print(f"Error: {e}. Ensure the required stem files exist in {output_folder}.")
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
 
 def mix_audio(vocal_file, instrumental_file, output_file="output.mp3"):
     """
@@ -104,7 +111,7 @@ def main():
         print(f"The folder '{folder_to_delete}' does not exist.")
 
      # Delete files if they exist
-    files_to_delete = ["original.mp3", "output_audio.mp3", "output_speed.mp3", "instrumental.wav", "parody_lyrics.mp3"]
+    files_to_delete = ["original.mp3", "output_speed.mp3", "instrumental.wav", "parody_lyrics.mp3"]
     for file in files_to_delete:
         if os.path.exists(file):
             try:
