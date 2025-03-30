@@ -1,33 +1,63 @@
-# import pyttsx3
+# splits from vocals and instrumental
+import os
 
-# engine = pyttsx3.init()
+def extract_audio_demucs(input_song, output_folder="demucs_output"):
+    """
+    Uses Facebook AI's Demucs to separate vocals and instrumentals.
 
-# text_to_sing = "La la la, I'm trying to sing."
+    Parameters:
+    - input_song (str): Path to the song file (e.g., 'song.mp3').
+    - output_folder (str): Folder where extracted files will be saved.
 
-# # Adjust the rate (words per minute) - lower rate might sound more like a slow song
-# engine.setProperty('rate', 200)
+    Output:
+    - Saves separated files in the specified output folder.
+    """
+    command = f"demucs -o {output_folder} {input_song}"
+    os.system(command)
+    print(f"Processing complete! Check the '{output_folder}' folder.")
 
-# # You can try different voices if available
-# voices = engine.getProperty('voices')
-# # for voice in voices:
-# #     print("Voice:", voice.name, voice.id)
-# # engine.setProperty('voice', voices[0].id) # Try different indices
+# Example usage:
+extract_audio_demucs("normal_song.mp3")
 
-# engine.say(text_to_sing)
-# engine.runAndWait()
+from pydub import AudioSegment
+def merge_instrumental_stems(output_folder="demucs_output/htdemucs/normal_song", output_file="instrumental.wav"):
+    """
+    Merges 'drums.wav', 'bass.wav', and 'other.wav' into a single instrumental track.
+
+    Parameters:
+    - output_folder (str): The directory where Demucs saves the separated stems.
+    - output_file (str): The final merged instrumental file.
+
+    Output:
+    - Saves the combined instrumental file.
+    """
+    # Load separated stems
+    drums = AudioSegment.from_file(f"{output_folder}/drums.wav")
+    bass = AudioSegment.from_file(f"{output_folder}/bass.wav")
+    other = AudioSegment.from_file(f"{output_folder}/other.wav")
+
+    # Merge stems by adding them together
+    instrumental = drums.overlay(bass).overlay(other)
+
+    # Export final instrumental file
+    instrumental.export(output_file, format="wav")
+    print(f"Instrumental track saved as {output_file}")
+
+# Example usage:
+merge_instrumental_stems()
+
+import librosa
+import soundfile as sf
+
+# Load audio files
+instrumental, sr = librosa.load("output/accompaniment.wav", sr=None)
+new_vocals, sr = librosa.load("new_vocals.mp3", sr=None)
+
+# Adjust tempo to match original
+new_vocals = librosa.effects.time_stretch(new_vocals, rate=1.1)  # Adjust rate as needed
+
+# Save aligned vocals
+sf.write("aligned_vocals.wav", new_vocals, sr)
 
 
-from transformers import pipeline
-from playsound import playsound
-
-text_to_speech = pipeline("text-to-speech", model="suno/bark")
-text = "hello my name is anish and im short."
-audio = text_to_speech(text)
-
-# Save the audio to a temporary file
-output_path = "output.wav"
-with open(output_path, "wb") as f:
-    f.write(audio["audio"].tobytes())  # Convert to bytes
-
-# Play the audio file
-playsound(output_path)
+# combines ours vocals and adds the it to the instrumental
