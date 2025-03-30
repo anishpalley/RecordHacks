@@ -46,52 +46,75 @@
 # # Example usage:
 # merge_instrumental_stems()
 
-import aubio
-import numpy as np
-
-# Load tracks
-instrumental = aubio.source("instrumental.wav")
-vocal = aubio.source("parody_lyrics.mp3")
-
-# Set up beat tracker
-beat_detector = aubio.tempo("default", 1024, 512, instrumental.samplerate)
-
-# Track beats in the instrumental
-beats_inst = []
-total_frames = 0
-while True:
-    samples, read = instrumental()
-    if beat_detector(samples):
-        beats_inst.append(total_frames)
-    total_frames += read
-    if read < 512:
-        break
-
-# Track beats in the vocal (same process as above)
-beats_vocal = []
-vocal.seek(0)
-while True:
-    samples, read = vocal()
-    if beat_detector(samples):
-        beats_vocal.append(total_frames)
-    total_frames += read
-    if read < 512:
-        break
-
-# Use the beat positions to adjust the timing of vocals relative to instrumental
-# This is a more advanced approach where you align based on detected beats
-
-
 from pydub import AudioSegment
+import time  # For potential small delays if needed
 
-instrumental = AudioSegment.from_wav("instrumental.wav")
-new_vocals = AudioSegment.from_wav("parody_lyrics.mp3")
+def align_audio(vocal_path, instrumental_path, output_path, vocal_start_offset_ms=0):
+    """
+    Combines vocal and instrumental audio with manual alignment.
 
-# Adjust volume levels
-new_vocals = new_vocals - 5  # Lower vocal volume
-final_mix = instrumental.overlay(new_vocals)
+    Args:
+        vocal_path (str): Path to the vocal MP3 file.
+        instrumental_path (str): Path to the instrumental MP3 file.
+        output_path (str): Path to save the combined MP3.
+        vocal_start_offset_ms (int): Offset in milliseconds to adjust the vocal track.
+                                      Positive value means vocals start later, negative means earlier.
+    """
+    try:
+        vocals = AudioSegment.from_mp3(vocal_path)
+        instrumental = AudioSegment.from_mp3(instrumental_path)
 
-# Export final song
-final_mix.export("final_song.mp3", format="mp3")
+        # --- 1. Trim Leading Silence (Optional but Recommended) ---
+        # You might want to manually inspect the waveforms in an audio editor
+        # to determine if there's significant leading silence to remove.
+        # You can use pydub's silence detection, but it might require tuning.
+        # For manual trimming based on observation:
+        # vocals = vocals[start_time_ms:]
+        # instrumental = instrumental[start_time_ms:]
 
-# combines ours vocals and adds the it to the instrumental
+        # --- 2. Adjust Vocal Start Time using offset ---
+        if vocal_start_offset_ms > 0:
+            # Add silence to the beginning of the vocal track
+            silence = AudioSegment.silent(duration=vocal_start_offset_ms)
+            vocals = silence + vocals
+        elif vocal_start_offset_ms < 0:
+            # Remove the beginning of the vocal track
+            vocals = vocals[-vocal_start_offset_ms:]  # Negative index from the end
+
+        # --- 3. Ensure Consistent Length (Optional - depends on your goal) ---
+        # If one track is longer than the other and you want them to end together,
+        # you might need to trim the longer one. For a simple overlay, this might not be necessary.
+        # if len(vocals) > len(instrumental):
+        #     vocals = vocals[:len(instrumental)]
+        # elif len(instrumental) > len(vocals):
+        #     instrumental = instrumental[:len(vocals)]
+
+        # --- 4. Overlay the Vocals on the Instrumental ---
+        combined = instrumental.overlay(vocals)
+
+        # --- 5. Export the Combined Audio ---
+        combined.export(output_path, format="mp3")
+        print(f"Successfully combined and aligned audio to: {output_path}")
+
+    except FileNotFoundError:
+        print("Error: One or both input files not found.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+if __name__ == "__main__":
+    vocal_file = "parody_lyrics.mp3"
+    instrumental_file = "instrumental.wav"
+    output_file = "out.mp3"
+
+    # --- Manual Alignment Offset (in milliseconds) ---
+    # Positive value: Vocals start later by this amount.
+    # Negative value: Vocals start earlier by this amount.
+    # You'll need to experiment with this value.
+    alignment_offset = 0  # Start with 0 and adjust
+
+    align_audio(vocal_file, instrumental_file, output_file, vocal_start_offset_ms=alignment_offset)
+
+    print("\nExperiment with the 'alignment_offset' value in the script to fine-tune the synchronization.")
+    print("You might need to try different positive and negative values and listen to the result.")
+    print("Consider using an audio editor (like Audacity) to visually inspect the waveforms")
+    print("to get a better idea of the required offset.")

@@ -61,7 +61,7 @@ def generate_parody(original_line, topic):
 
     try:
         response = openai.chat.completions.create(
-            model="gpt-4",  # or "gpt-3.5-turbo" if you don’t have GPT-4 access
+            model="gpt-4o-mini",  # or "gpt-3.5-turbo" if you don’t have GPT-4 access
             messages=[{"role": "user", "content": prompt}],
             temperature=0.8,
             max_tokens=60
@@ -87,7 +87,7 @@ def generate_parody_batch(original_lines, topic, batch_size=5):
         if prompts:
             try:
                 response = openai.chat.completions.create(
-                    model="gpt-3.5-turbo",  # Cheaper, faster model
+                    model="gpt-4o-mini",  # Cheaper, faster model
                     messages=[{"role": "system", "content": f"Write parody versions of these lyrics about '{topic}'. Keep the rhythm and rhyme if possible."},
                              {"role": "user", "content": "\n\n".join(prompts)}],
                     temperature=0.8

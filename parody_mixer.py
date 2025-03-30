@@ -26,5 +26,5 @@ if __name__ == "__main__":
     overlay_parody_on_instrumental(
         instrumental_path="instrumental.wav",
         parody_vocals_path="parody_lyrics.mp3",
-        output_path="final_parody.mp3"
+        output_path="OUTPUT.mp3"
     )
