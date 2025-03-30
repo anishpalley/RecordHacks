@@ -1,6 +1,7 @@
 import yt_dlp
 
-def download_song_as_mp3(song_name, output_path="original.mp3"):
+def main(song_name, output_path="original"):
+    song_name = song_name + " lyrics"
     print(f"\n🔎 Searching and downloading '{song_name}' from YouTube...")
 
     ydl_opts = {
@@ -27,4 +28,4 @@ def download_song_as_mp3(song_name, output_path="original.mp3"):
 # Example usage
 if __name__ == "__main__":
     song = input("Enter the song title to download: ")
-    download_song_as_mp3(song)
+    main(song)

@@ -103,6 +103,17 @@ def main():
     else:
         print(f"The folder '{folder_to_delete}' does not exist.")
 
+    # Delete the original.mp3 file
+    original_file = "original.mp3"
+    if os.path.exists(original_file):
+        try:
+            os.remove(original_file)
+            print(f"Successfully deleted the file: {original_file}")
+        except OSError as e:
+            print(f"Error deleting the file: {e}")
+    else:
+        print(f"The file '{original_file}' does not exist.")
+
 if __name__ == "__main__":
     main()
 

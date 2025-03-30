@@ -3,49 +3,135 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Music AI App</title>
+  <title>ParodyAI</title>
   <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-  <header>
-    <h1>Welcome to the Music AI App</h1>
-    <p>Create hilarious parodies with AI!</p>
+  <header class="navbar">
+    <div class="logo">
+      <img src="/static/logo.png" alt="ParodyAI Logo">
+      <span>ParodyAI</span>
+    </div>
+    <nav class="nav-links">
+      <a href="#how-it-works">How it Works</a>
+      <a href="#examples">Examples</a>
+      <a href="#pricing">Pricing</a>
+    </nav>
+    <div class="auth-buttons">
+      <a href="/login" class="login-btn">Login</a>
+      <a href="/signup" class="signup-btn">Sign Up</a>
+    </div>
   </header>
 
-  <main>
-    <section>
-      <h2>Generate a Parody</h2>
-      <form id="generate-parody-form">
-        <label for="song_name">Song Name:</label>
-        <input type="text" id="song_name" name="song_name" required>
-        <br>
-        <label for="topic">Topic:</label>
-        <input type="text" id="topic" name="topic" required>
-        <br>
-        <button type="submit">Generate Parody</button>
+  <section class="hero">
+    <h1>Turn Any Song Into a Hilarious Parody</h1>
+    <p>Create amazing parodies using AI-powered voice transformation and creative suggestions</p>
+  </section>
+
+  <main class="main-content">
+    <section class="parody-form-section">
+      <form id="generate-parody-form" class="form">
+        <div class="form-group">
+          <label for="song_name">Enter Original Song</label>
+          <input type="text" id="song_name" name="song_name" placeholder="Enter song title" required>
+        </div>
+        <div class="form-group">
+          <label for="topic">Parody Theme</label>
+          <input type="text" id="topic" name="topic" placeholder="What's your parody about?" required>
+        </div>
+        <div class="form-group">
+          <label for="voice">Select Voice</label>
+          <select id="voice" name="voice">
+            <option value="en-US-AnaNeural">en-US-AnaNeural</option>
+            <option value="en-US-AndrewMultilingualNeural">en-US-AndrewMultilingualNeural</option>
+            <option value="en-US-AndrewNeural">en-US-AndrewNeural</option>
+            <option value="en-US-AriaNeural">en-US-AriaNeural</option>
+            <option value="en-US-AvaMultilingualNeural">en-US-AvaMultilingualNeural</option>
+            <option value="en-US-AvaNeural">en-US-AvaNeural</option>
+            <option value="en-US-BrianMultilingualNeural">en-US-BrianMultilingualNeural</option>
+            <option value="en-US-BrianNeural">en-US-BrianNeural</option>
+            <option value="en-US-ChristopherNeural">en-US-ChristopherNeural</option>
+            <option value="en-US-EmmaMultilingualNeural">en-US-EmmaMultilingualNeural</option>
+            <option value="en-US-EmmaNeural">en-US-EmmaNeural</option>
+            <option value="en-US-EricNeural">en-US-EricNeural</option>
+            <option value="en-US-GuyNeural">en-US-GuyNeural</option>
+            <option value="en-US-JennyNeural">en-US-JennyNeural</option>
+            <option value="en-US-MichelleNeural">en-US-MichelleNeural</option>
+            <option value="en-US-RogerNeural">en-US-RogerNeural</option>
+            <option value="en-US-SteffanNeural">en-US-SteffanNeural</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="rate">Speed</label>
+          <select id="rate" name="rate">
+            <option value="normal">Normal Speed</option>
+            <option value="slow">Slow Speed</option>
+            <option value="fast">Fast Speed</option>
+          </select>
+        </div>
+        <button type="submit" class="btn">Generate Parody</button>
       </form>
-      <h3>Result:</h3>
-      <pre id="result"></pre>
     </section>
 
-    <section>
-      <h2>Text-to-Speech</h2>
-      <form id="ttsForm">
-        <input type="text" id="filePath" placeholder="Enter File Path" required>
-        <input type="text" id="outputFile" placeholder="Enter Output File Name" required>
-        <input type="text" id="rate" placeholder="Enter Rate (e.g., +0%)" value="+0%">
-        <button type="submit">Generate TTS</button>
-      </form>
-      <div id="ttsResult"></div>
+    <section class="result-section">
+      <h3>Result:</h3>
+      <div id="audio-download" style="margin-top: 20px; display: none;">
+        <a id="download-link" href="#" class="btn" download>Download Parody Audio</a>
+      </div>
+      <pre id="result"></pre>
     </section>
   </main>
 
+  <footer class="footer">
+    <div class="features">
+      <div class="feature">
+        <div class="icon">
+          <img src="/static/icons/ai-powered-voices.svg" alt="AI-Powered Voices">
+        </div>
+        <h4>AI-Powered Voices</h4>
+        <p>Choose from multiple AI voices to make your parody unique</p>
+      </div>
+      <div class="feature">
+        <div class="icon">
+          <img src="/static/icons/instant-generation.svg" alt="Instant Generation">
+        </div>
+        <h4>Instant Generation</h4>
+        <p>Get your parody generated in seconds with perfect timing</p>
+      </div>
+      <div class="feature">
+        <div class="icon">
+          <img src="/static/icons/easy-sharing.svg" alt="Easy Sharing">
+        </div>
+        <h4>Easy Sharing</h4>
+        <p>Share your parodies directly to social media</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="logo">
+        <img src="/static/logo.png" alt="ParodyAI Logo">
+        <span>ParodyAI</span>
+      </div>
+      <nav class="footer-links">
+        <a href="/terms">Terms</a>
+        <a href="/privacy">Privacy</a>
+        <a href="/contact">Contact</a>
+      </nav>
+    </div>
+  </footer>
+
   <script>
     document.getElementById("generate-parody-form").addEventListener("submit", async function (event) {
-      event.preventDefault(); // Prevent form submission
+      event.preventDefault();
 
       const songName = document.getElementById("song_name").value;
       const topic = document.getElementById("topic").value;
+      const generateButton = document.querySelector(".btn");
+      const resultElement = document.getElementById("result");
+
+      // Disable the button and show "Generating..." message
+      generateButton.disabled = true;
+      generateButton.textContent = "Generating...";
+      resultElement.textContent = ""; // Clear previous results
 
       try {
         const response = await fetch("/generate_parody", {
@@ -58,15 +144,23 @@
 
         const result = await response.json();
         if (response.ok) {
-          document.getElementById("result").textContent = result.parody_lyrics;
+          resultElement.textContent = result.parody_lyrics;
+          const downloadLink = document.getElementById("download-link");
+          downloadLink.href = result.audio_file_url;
+          document.getElementById("audio-download").style.display = "block";
         } else {
-          document.getElementById("result").textContent = `Error: ${result.error}`;
+          resultElement.textContent = `Error: ${result.error}`;
+          document.getElementById("audio-download").style.display = "none";
         }
       } catch (error) {
-        document.getElementById("result").textContent = `Error: ${error.message}`;
+        resultElement.textContent = `Error: ${error.message}`;
+        document.getElementById("audio-download").style.display = "none";
+      } finally {
+        // Re-enable the button and reset its text
+        generateButton.disabled = false;
+        generateButton.textContent = "Generate Parody";
       }
     });
   </script>
-  <script src="/static/script.js"></script>
 </body>
 </html>

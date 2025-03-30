@@ -14,13 +14,36 @@ async def generate_speech_from_file(input_file, output_filename, rate="+0%", voi
     await communicate.save(output_filename)
     print(f"✅ Audio saved as {output_filename} (Rate: {rate})")
 
-# Example usage
-person = "en-US-BrianNeural"
-input_file = "parody_lyrics.txt"
-output_filename = "output_speed.mp3"
+def main():
+    voices = [
+        "en-US-AnaNeural",
+        "en-US-AndrewMultilingualNeural",
+        "en-US-AndrewNeural",
+        "en-US-AriaNeural",
+        "en-US-AvaMultilingualNeural",
+        "en-US-AvaNeural",
+        "en-US-BrianMultilingualNeural",
+        "en-US-BrianNeural",
+        "en-US-ChristopherNeural",
+        "en-US-EmmaMultilingualNeural",
+        "en-US-EmmaNeural",
+        "en-US-EricNeural",
+        "en-US-GuyNeural",
+        "en-US-JennyNeural",
+        "en-US-MichelleNeural",
+        "en-US-RogerNeural",
+        "en-US-SteffanNeural"
+    ]
+    # Example usage
+    person = "en-US-BrianNeural"
+    input_file = "parody_lyrics.txt"
+    output_filename = "output_speed.mp3"
 
-# Adjust speed:
-# - "+50%" = 50% faster
-# - "-30%" = 30% slower
-# - "+100%" = double speed
-asyncio.run(generate_speech_from_file(input_file, output_filename, rate="+0%", voice=person))
+    # Adjust speed:
+    # - "+50%" = 50% faster
+    # - "-30%" = 30% slower
+    # - "+100%" = double speed
+    asyncio.run(generate_speech_from_file(input_file, output_filename, rate="+0%", voice=person))
+
+if __name__ == "__main__":
+    main()
