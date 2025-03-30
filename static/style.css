@@ -384,3 +384,25 @@ footer a {
 .footer-links a:hover {
     color: #ff758c;
 }
+#audio-download {
+    text-align: center; /* Center the button */
+    margin-top: 20px;
+}
+
+#download-link {
+    display: inline-block; /* Ensure the button behaves like a block element */
+    width: 200px; /* Set a fixed width */
+    padding: 10px 15px; /* Add padding for better appearance */
+    background-color: #6c63ff; /* Button background color */
+    color: #fff; /* Button text color */
+    text-align: center; /* Center the text inside the button */
+    text-decoration: none; /* Remove underline */
+    border-radius: 5px; /* Add rounded corners */
+    font-size: 16px; /* Adjust font size */
+    font-weight: bold; /* Make the text bold */
+    transition: background-color 0.3s ease; /* Add hover effect */
+}
+
+#download-link:hover {
+    background-color: #5a54e0; /* Darken the button on hover */
+}
