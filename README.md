@@ -35,7 +35,7 @@ ParodyAI is an AI-powered application that transforms any song into a hilarious 
    - Extract the instrumental track using tools like `yt-dlp` or `Demucs`.
 
 4. **Synthesize Vocals**  
-   - Use Bark or Edge TTS to generate vocals from the parody lyrics.
+   - Use Edge TTS to generate vocals from the parody lyrics.
 
 5. **Mix and Export**  
    - Combine vocals and instrumental to create the final parody audio file.
@@ -124,11 +124,11 @@ ParodyAI is an AI-powered application that transforms any song into a hilarious 
 
 - **Flask**: Backend framework for the web interface.
 - **OpenAI GPT**: Generates parody lyrics.
-- **Bark**: AI-powered text-to-singing model.
 - **Edge TTS**: Text-to-speech synthesis.
 - **Pydub**: Audio processing and mixing.
 - **Demucs**: Instrumental and vocal separation.
 - **yt-dlp**: Downloads audio from YouTube.
+- **Genius API**: Fetches song lyrics.
 
 ---
 
@@ -180,6 +180,5 @@ This project is licensed under the [MIT License](LICENSE).
 ## Acknowledgments 🙌
 
 - [OpenAI](https://openai.com) for GPT models.
-- [Suno AI](https://github.com/suno-ai/bark) for Bark.
 - [Demucs](https://github.com/facebookresearch/demucs) for audio separation.
 - [Genius API](https://genius.com/developers) for fetching song lyrics.
