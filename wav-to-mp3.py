@@ -24,7 +24,7 @@ def convert_wav_to_mp3(wav_filepath, mp3_filepath):
 
 if __name__ == "__main__":
     # Specify the input WAV file path
-    wav_file = "/demucs_output/htdemucs/normal_song/vocals.wav"
+    wav_file = "vocals.wav"
 
     # Specify the desired output MP3 filename in the current folder
     mp3_file = "vocals.mp3"
