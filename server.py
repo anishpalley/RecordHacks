@@ -18,14 +18,24 @@ def generate_parody():
     data = request.json
     song_name = data.get("song_name")
     topic = data.get("topic")
-    if not song_name or not topic:
-        return jsonify({"error": "Missing song_name or topic"}), 400
+    voice = data.get("voice")  # Get the selected voice
+    speed = data.get("speed")  # Get the selected speed
+    if not song_name or not topic or not voice or not speed:
+        return jsonify({"error": "Missing song_name, topic, voice, or speed"}), 400
+
+    # Map speed to playback rate
+    speed_map = {
+        "normal": "1.0x",
+        "slow": "0.75x",
+        "fast": "1.5x"
+    }
+    playback_speed = speed_map.get(speed, "1.0x")  # Default to normal speed
 
     result_file = parody_generator.generate_parody_song(song_name, topic)
     if result_file:
         try:
             download_song_as_mp3.main(song_name)
-            edge.main()  # Generate TTS vocals
+            edge.main(voice=voice, speed=playback_speed)  # Pass the voice and speed to edge.py
             main.main()
             return jsonify({
                 "parody_lyrics": open(result_file).read(),

@@ -4,12 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ParodyAI</title>
+  <link rel="icon" href="/static/parody_ai_logo.png" type="image/png">
   <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
   <header class="navbar">
     <div class="logo">
-      <img src="/static/logo.png" alt="ParodyAI Logo">
+      <img src="/static/parody_ai_logo.png" alt="ParodyAI Logo">
       <span>ParodyAI</span>
     </div>
     <nav class="nav-links">
@@ -59,6 +60,7 @@
             <option value="en-US-MichelleNeural">en-US-MichelleNeural</option>
             <option value="en-US-RogerNeural">en-US-RogerNeural</option>
             <option value="en-US-SteffanNeural">en-US-SteffanNeural</option>
+            <option value="en-IN-NeerjaNeural">en-IN-NeerjaNeural</option>
           </select>
         </div>
         <div class="form-group">
@@ -86,21 +88,21 @@
     <div class="features">
       <div class="feature">
         <div class="icon">
-          <img src="/static/icons/ai-powered-voices.svg" alt="AI-Powered Voices">
+          <img src="/static/ai_generation_logo.png" alt="AI-Powered Voices">
         </div>
         <h4>AI-Powered Voices</h4>
         <p>Choose from multiple AI voices to make your parody unique</p>
       </div>
       <div class="feature">
         <div class="icon">
-          <img src="/static/icons/instant-generation.svg" alt="Instant Generation">
+          <img src="/static/quick_logo.png" alt="Instant Generation">
         </div>
         <h4>Instant Generation</h4>
         <p>Get your parody generated in seconds with perfect timing</p>
       </div>
       <div class="feature">
         <div class="icon">
-          <img src="/static/icons/easy-sharing.svg" alt="Easy Sharing">
+          <img src="/static/share_logo.png" alt="Easy Sharing">
         </div>
         <h4>Easy Sharing</h4>
         <p>Share your parodies directly to social media</p>
@@ -108,7 +110,7 @@
     </div>
     <div class="footer-bottom">
       <div class="logo">
-        <img src="/static/logo.png" alt="ParodyAI Logo">
+        <img src="/static/parody_ai_logo.png" alt="ParodyAI Logo">
         <span>ParodyAI</span>
       </div>
       <nav class="footer-links">
@@ -125,6 +127,8 @@
 
       const songName = document.getElementById("song_name").value;
       const topic = document.getElementById("topic").value;
+      const selectedVoice = document.getElementById("voice").value; // Get the selected voice
+      const selectedSpeed = document.getElementById("rate").value; // Get the selected speed
       const generateButton = document.querySelector(".btn");
       const resultElement = document.getElementById("result");
 
@@ -139,7 +143,7 @@
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ song_name: songName, topic: topic }),
+          body: JSON.stringify({ song_name: songName, topic: topic, voice: selectedVoice, speed: selectedSpeed }), // Include voice and speed
         });
 
         const result = await response.json();

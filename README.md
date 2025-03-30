@@ -1,84 +1,150 @@
-Nice — you're leveling up your parody generator into a full-blown music AI app now. Making it generate **actual audio** that sounds like a **parody of the original song** (same beat, new lyrics) is definitely possible, but it adds some new tech layers.
+# ParodyAI 🎤
+
+ParodyAI is an AI-powered application that transforms any song into a hilarious parody. It generates parody lyrics, synthesizes vocals, and overlays them on the instrumental track to create a complete parody audio file.
 
 ---
 
-### 🛠️ What You’re Asking For
+## Features 🚀
 
-You want your program to:
-1. Generate parody lyrics (✅ done).
-2. Create **vocals** that match those lyrics.
-3. Sync the vocals to the **beat/instrumental** of the original song — basically, a new track that sounds like a parody.
+1. **Generate Parody Lyrics**  
+   - AI generates clever and funny parody lyrics while maintaining the rhythm and rhyme of the original song.
+
+2. **Text-to-Singing AI**  
+   - Converts parody lyrics into realistic vocals using AI-powered voice synthesis.
+
+3. **Instrumental and Vocal Mixing**  
+   - Overlays generated vocals on the instrumental track to produce a complete parody song.
+
+4. **Customizable Voices and Speed**  
+   - Choose from multiple AI voices and adjust playback speed for a personalized parody.
+
+5. **Web Interface**  
+   - User-friendly web interface for generating and downloading parody songs.
 
 ---
 
-### 🔧 Here's How You Can Do It
+## How It Works 🛠️
 
-#### ✅ Step 1: Get the Instrumental Version of the Original Song
-You’ll need the **beat only** (no vocals). Options:
-- Search YouTube for "[Song Name] instrumental" → download it using `yt-dlp`
-- Use [LALAL.AI](https://www.lalal.ai/) or [Spleeter](https://github.com/deezer/spleeter) to **split vocals and instrumentals** from the original song
+1. **Input Song and Parody Theme**  
+   - Provide the original song title and the theme for the parody.
 
-Example using `spleeter`:
+2. **Generate Parody Lyrics**  
+   - The app fetches the original lyrics and generates parody lyrics using OpenAI's GPT model.
 
-```bash
-pip install spleeter
-spleeter separate -i original.mp3 -p spleeter:2stems -o output
+3. **Download Instrumental**  
+   - Extract the instrumental track using tools like `yt-dlp` or `Demucs`.
+
+4. **Synthesize Vocals**  
+   - Use Bark or Edge TTS to generate vocals from the parody lyrics.
+
+5. **Mix and Export**  
+   - Combine vocals and instrumental to create the final parody audio file.
+
+---
+
+## Installation 🖥️
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/anishpalley/ParodyAI.git
+   cd ParodyAI
+   ```
+
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. Set up environment variables:
+   - Create a `.env` file with the following keys:
+     ```
+     GENIUS_API_TOKEN=<your_genius_api_token>
+     OPENAI_API_KEY=<your_openai_api_key>
+     ```
+
+4. Run the Flask server:
+   ```bash
+   python server.py
+   ```
+
+5. Open the app in your browser at `http://127.0.0.1:5000`.
+
+---
+
+## Usage 🎶
+
+### Web Interface
+1. Open the app in your browser.
+2. Enter the song title, parody theme, voice, and speed.
+3. Click "Generate Parody" to create and download your parody song.
+
+### Command Line
+- Use the CLI tools in the repository for advanced usage:
+  - `parody_generator.py` for generating parody lyrics.
+  - `parody_audio_generator.py` for synthesizing vocals and mixing audio.
+
+---
+
+## Tools and Libraries 🛠️
+
+- **Flask**: Backend framework for the web interface.
+- **OpenAI GPT**: Generates parody lyrics.
+- **Bark**: AI-powered text-to-singing model.
+- **Pydub**: Audio processing and mixing.
+- **Demucs**: Instrumental and vocal separation.
+- **yt-dlp**: Downloads audio from YouTube.
+
+---
+
+## File Structure 📂
+
+```
+RecordHacks/
+├── parody_generator.py         # Generates parody lyrics
+├── parody_audio_generator.py   # Synthesizes vocals and mixes audio
+├── server.py                   # Flask server for the web interface
+├── main.py                     # Handles audio separation and mixing
+├── edge.py                     # Text-to-speech synthesis
+├── download_song_as_mp3.py     # Downloads songs from YouTube
+├── templates/                  # HTML templates for the web interface
+├── static/                     # CSS and JS files for the web interface
+├── requirements.txt            # Python dependencies
+├── README.md                   # Project documentation
 ```
 
 ---
 
-#### ✅ Step 2: Turn Lyrics into Vocals (Text-to-Singing)
-You need a **text-to-singing model** that:
-- Accepts lyrics + melody (or tries to match one)
-- Generates realistic singing vocals
+## Example 🎤
 
-Options:
-| Tool | Pros | Cons |
-|------|------|------|
-| **Bark by Suno** | Easy, expressive voice | Doesn't take melody input |
-| **TTS (Coqui)** | More control | Robotic |
-| **DiffSinger** / **OpenSinger** | Deep learning, customizable | Harder to set up |
-| **Suno AI (proprietary)** | Stunning quality | Not open for devs (yet) |
+1. Input:  
+   - Song: "Never Gonna Give You Up"  
+   - Theme: "Snacks and Yoga"
 
-For dev use today, **[Bark](https://github.com/suno-ai/bark)** is your best bet. You give it text + optional voice preset and it sings the lines.
-
----
-
-#### ✅ Step 3: Sync Vocals with the Beat
-This is the hardest part: aligning your generated vocals with the instrumental beat.
-
-Options:
-- 🧠 Use a DAW (GarageBand, Audacity, FL Studio) to manually align them
-- ⚙️ Automate with `pydub` or `moviepy` (e.g., pad with silence, align based on syllables)
-
-Example (manual align):
-```python
-from pydub import AudioSegment
-
-vocals = AudioSegment.from_file("vocals.wav")
-instrumental = AudioSegment.from_file("beat.mp3")
-
-final_mix = instrumental.overlay(vocals, position=0)
-final_mix.export("final_parody.mp3", format="mp3")
-```
+2. Output:  
+   - Parody Lyrics:  
+     ```
+     We're no strangers to snacks,  
+     You know the crunch and so do I...  
+     ```
+   - Parody Audio: Downloadable MP3 file.
 
 ---
 
-### ⚡ Summary of What You’ll Need
+## Contributing 🤝
 
-| Task | Tool |
-|------|------|
-| Get beat | YouTube + `yt-dlp` or Spleeter |
-| Generate vocals | Bark |
-| Align audio | `pydub`, DAW, or manual |
-| Optional | Tempo estimation (`librosa`) |
+Contributions are welcome! Feel free to submit issues or pull requests to improve the project.
 
 ---
 
-### 🚀 Want Me to Help You Code This?
-I can:
-- Add **instrumental + vocal overlay** to your existing CLI
-- Show how to use **Bark or another TTS model**
-- Help with **timing & alignment**
+## License 📜
 
-Let me know how far you want to go — this can get super powerful (and super fun).
+This project is licensed under the [MIT License](LICENSE).
+
+---
+
+## Acknowledgments 🙌
+
+- [OpenAI](https://openai.com) for GPT models.
+- [Suno AI](https://github.com/suno-ai/bark) for Bark.
+- [Demucs](https://github.com/facebookresearch/demucs) for audio separation.
+- [Genius API](https://genius.com/developers) for fetching song lyrics.
