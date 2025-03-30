@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Music AI App</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header>
+    <h1>Welcome to the Music AI App</h1>
+    <p>Create hilarious parodies with AI!</p>
+  </header>
+
+  <main>
+    <section>
+      <h2>Generate a Parody</h2>
+      <form id="generate-parody-form">
+        <label for="song_name">Song Name:</label>
+        <input type="text" id="song_name" name="song_name" required>
+        <br>
+        <label for="topic">Topic:</label>
+        <input type="text" id="topic" name="topic" required>
+        <br>
+        <button type="submit">Generate Parody</button>
+      </form>
+      <h3>Result:</h3>
+      <pre id="result"></pre>
+    </section>
+
+    <section>
+      <h2>Text-to-Speech</h2>
+      <form id="ttsForm">
+        <input type="text" id="filePath" placeholder="Enter File Path" required>
+        <input type="text" id="outputFile" placeholder="Enter Output File Name" required>
+        <input type="text" id="rate" placeholder="Enter Rate (e.g., +0%)" value="+0%">
+        <button type="submit">Generate TTS</button>
+      </form>
+      <div id="ttsResult"></div>
+    </section>
+  </main>
+
+  <script>
+    document.getElementById("generate-parody-form").addEventListener("submit", async function (event) {
+      event.preventDefault(); // Prevent form submission
+
+      const songName = document.getElementById("song_name").value;
+      const topic = document.getElementById("topic").value;
+
+      try {
+        const response = await fetch("/generate_parody", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ song_name: songName, topic: topic }),
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+          document.getElementById("result").textContent = result.parody_lyrics;
+        } else {
+          document.getElementById("result").textContent = `Error: ${result.error}`;
+        }
+      } catch (error) {
+        document.getElementById("result").textContent = `Error: ${error.message}`;
+      }
+    });
+  </script>
+  <script src="/static/script.js"></script>
+</body>
+</html>
