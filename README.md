@@ -1,6 +1,7 @@
 # ParodyAI 🎤
 
 ParodyAI is an AI-powered application that transforms any song into a hilarious parody. It generates parody lyrics, synthesizes vocals, and overlays them on the instrumental track to create a complete parody audio file.
+Created by Tarun Patanjali, Abhishek Shrestha, Satvik Agarwal, and Anish Palley
 
 ---
 
